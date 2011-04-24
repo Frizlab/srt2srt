@@ -8,11 +8,22 @@
 
 #include <stdio.h>
 
-int main (int argc, const char * argv[])
-{
+typedef int BOOL;
 
-	// insert code here...
-	printf("Hello, World!\n");
-    return 0;
+typedef enum e_error {
+	NO_ERROR     = 0,
+	SYNTAX_ERROR = 1
+} t_error;
+
+t_error usage(const char *progname, BOOL from_syntax_error) {
+	FILE *out = stdout;
+	if (from_syntax_error) out = stderr;
+	
+	fprintf(out, "Usage: %s ...", progname);
+	
+	return from_syntax_error? SYNTAX_ERROR: NO_ERROR;
 }
 
+int main(int argc, const char * argv[]) {
+	return NO_ERROR;
+}
