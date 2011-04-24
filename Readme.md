@@ -13,6 +13,7 @@ Here is an example of a SubRip subtitle entry that will display the
 text "Altocumulus clouds occur between six thousand" starting twenty seconds
 after the beginning of the movie, and ending 4.4 seconds
 after (from [Wikipedia][srt_article_wiki]):
+
 ```
 1
 00:00:20,000 --> 00:00:24,400
@@ -28,6 +29,6 @@ order to resynchronize them with their associated movie.
 
 Supported functionalities:
 
-* Currently none, the project just opened! Stay tuned for updates…
+* Currently none, the project just opened! Stay tuned…
 
 [srt_article_wiki]: http://en.wikipedia.org/wiki/SubRip
