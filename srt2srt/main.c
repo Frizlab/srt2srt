@@ -1,15 +1,18 @@
-//
-//  main.c
-//  srt2srt
-//
-//  Created by François LAMBOLEY on 4/24/11.
-//  Copyright 2011 Frost Land. All rights reserved.
-//
+/*
+ *  main.c
+ *  srt2srt
+ *
+ *  Created by François LAMBOLEY on 4/24/11.
+ *  Copyright 2011 Frost Land. All rights reserved.
+ */
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <getopt.h>
 #include <assert.h>
+#include <strings.h>
+
+#include "free_const_char.h"
 
 typedef int BOOL;
 #define NO  ((BOOL)0)
@@ -21,11 +24,13 @@ typedef enum e_error {
 } t_error;
 
 typedef struct s_prgm_options {
-	BOOL verbose;	/* Default: NO */
+	BOOL verbose;       /* Default: NO */
 	
-	int delay;		/* Default: 0 */
-	float ifps;		/* Default: 25 */
-	float ofps;		/* Default: 23.976 */
+	const char *output; /* Default: NULL. Means stdout. */	
+	
+	int delay;          /* Default: 0 */
+	float ifps;         /* Default: 25 */
+	float ofps;         /* Default: 23.976 */
 } t_prgm_options;
 
 t_error usage(const char *progname, BOOL from_syntax_error) {
@@ -38,14 +43,16 @@ t_error usage(const char *progname, BOOL from_syntax_error) {
 	fprintf(out, "\n   -d ms   --delay=ms\n   Sets the delay of the output srt file in millisecond. Must be an integer, but can be negative.\n");
 	fprintf(out, "\n   -i fps   --in-fps=fps\n   Sets the input fps of the given srt file. Default to 25.\n");
 	fprintf(out, "\n   -o fps   --out-fps=fps\n   Sets the output fps. Default to 23.976.\n");
-	fprintf(out, "\nThe transformed file is outputted on stdout.\n");
+	fprintf(out, "\n   --output=filename\n   Sets the output of srt2srt. If omitted or set to \"-\", will output on stdout.\n");
 	
 	return from_syntax_error? SYNTAX_ERROR: NO_ERROR;
 }
 
 int main(int argc, char * const * argv) {
 	int getopt_long_ret;
-	t_prgm_options options = {NO, 0, 25, 23.976};
+	t_error ret = NO_ERROR;
+	BOOL parse_options_succeeded = YES;
+	t_prgm_options options = {NO, NULL, 0, 25, 23.976};
 	
 	do {
 		char *number_parse_check = NULL;
@@ -59,6 +66,7 @@ int main(int argc, char * const * argv) {
 			{"delay",   required_argument, NULL, 'd'},
 			{"in-fps",  required_argument, NULL, 'i'},
 			{"out-fps", required_argument, NULL, 'o'},
+			{"output",  required_argument, NULL, 'p'},
 			{0, 0, 0, 0}
 		};
 		
@@ -77,6 +85,13 @@ int main(int argc, char * const * argv) {
 				 * (see the definition of the long_options array). */
 				assert(0);
 				break;
+			case 'p':
+				if (strcmp(optarg, "-") != 0) {
+					char *optarg_copy = malloc(sizeof(char)*strlen(optarg));
+					strcpy(optarg_copy, optarg);
+					options.output = optarg_copy;
+				}
+				break;
 			case 'v':
 				options.verbose = YES;
 				break;
@@ -91,40 +106,47 @@ int main(int argc, char * const * argv) {
 				options.delay = (int)strtol(optarg, &number_parse_check, 10);
 				if (*number_parse_check != '\0') {
 					fprintf(stderr, "%s: bad argument for the \"delay\" option.\n", argv[0]);
-					return SYNTAX_ERROR;
+					parse_options_succeeded = NO;
 				}
 				break;
 			case 'i':
 				options.ifps = strtof(optarg, &number_parse_check);
 				if (*number_parse_check != '\0' || options.ifps <= 0) {
 					fprintf(stderr, "%s: bad argument for the \"in-fps\" option.\n", argv[0]);
-					return SYNTAX_ERROR;
+					parse_options_succeeded = NO;
 				}
 				break;
 			case 'o':
 				options.ofps = strtof(optarg, &number_parse_check);
 				if (*number_parse_check != '\0' || options.ofps <= 0) {
 					fprintf(stderr, "%s: bad argument for the \"out-fps\" option.\n", argv[0]);
-					return SYNTAX_ERROR;
+					parse_options_succeeded = NO;
 				}
 				break;
-			case '?': break; /* getopt_long already printed an error message. */
+			case '?':
+				parse_options_succeeded = NO;
+				break; /* getopt_long already printed an error message. */
 			default:
 				assert(0);
 		}
-	} while (getopt_long_ret != -1);
+	} while (getopt_long_ret != -1 && parse_options_succeeded);
 	
-	if (optind != argc - 1)
-		return usage(argv[0], YES);
-	
-	if (options.verbose) {
-		printf("Easter egg: verbose mode is activated!\n");
-		printf("Options:\n");
-		printf("   delay:   %d\n", options.delay);
-		printf("   in-fps:  %g\n", options.ifps);
-		printf("   out-fps: %g\n", options.ofps);
-		printf("Treated file path is: %s\n", argv[argc - 1]);
+	if (!parse_options_succeeded || optind != argc - 1) {
+		ret = usage(argv[0], YES);
+		goto end;
 	}
 	
-	return NO_ERROR;
+	if (options.verbose) {
+		fprintf(stderr, "Easter egg: verbose mode is activated!\n");
+		fprintf(stderr, "Options:\n");
+		fprintf(stderr, "   delay:   %d\n", options.delay);
+		fprintf(stderr, "   in-fps:  %g\n", options.ifps);
+		fprintf(stderr, "   out-fps: %g\n", options.ofps);
+		fprintf(stderr, "   output:  %s\n", options.output != NULL? options.output: "stdout");
+		fprintf(stderr, "Treated file path is: %s\n", argv[argc - 1]);
+	}
+	
+end:
+	if (options.output != NULL) free_const_char(options.output);
+	return ret;
 }

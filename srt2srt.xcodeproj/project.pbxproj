@@ -27,6 +27,7 @@
 		7B607634136466A000BDC2BE /* main.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = main.c; sourceTree = "<group>"; };
 		7B607636136466A000BDC2BE /* srt2srt.1 */ = {isa = PBXFileReference; lastKnownFileType = text.man; path = srt2srt.1; sourceTree = "<group>"; };
 		7B607644136473E300BDC2BE /* Readme.md */ = {isa = PBXFileReference; lastKnownFileType = text; path = Readme.md; sourceTree = "<group>"; };
+		7B6076561365906100BDC2BE /* free_const_char.h */ = {isa = PBXFileReference; fileEncoding = 4; path = free_const_char.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -60,6 +61,7 @@
 		7B607633136466A000BDC2BE /* srt2srt */ = {
 			isa = PBXGroup;
 			children = (
+				7B6076561365906100BDC2BE /* free_const_char.h */,
 				7B607634136466A000BDC2BE /* main.c */,
 				7B607636136466A000BDC2BE /* srt2srt.1 */,
 			);
@@ -127,7 +129,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
-				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_C_LANGUAGE_STANDARD = ansi;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PREPROCESSOR_DEFINITIONS = DEBUG;
 				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
@@ -138,6 +140,10 @@
 				MACOSX_DEPLOYMENT_TARGET = 10.6;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = macosx;
+				WARNING_CFLAGS = (
+					"-Wall",
+					"-pedantic",
+				);
 			};
 			name = Debug;
 		};
@@ -145,13 +151,17 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
-				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_C_LANGUAGE_STANDARD = ansi;
 				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
 				GCC_WARN_ABOUT_RETURN_TYPE = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				MACOSX_DEPLOYMENT_TARGET = 10.6;
 				SDKROOT = macosx;
+				WARNING_CFLAGS = (
+					"-Wall",
+					"-pedantic",
+				);
 			};
 			name = Release;
 		};
