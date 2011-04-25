@@ -38,6 +38,7 @@ t_error usage(const char *progname, BOOL from_syntax_error) {
 	fprintf(out, "\n   -d ms   --delay=ms\n   Sets the delay of the output srt file in millisecond. Must be an integer, but can be negative.\n");
 	fprintf(out, "\n   -i fps   --in-fps=fps\n   Sets the input fps of the given srt file. Default to 25.\n");
 	fprintf(out, "\n   -o fps   --out-fps=fps\n   Sets the output fps. Default to 23.976.\n");
+	fprintf(out, "\nThe transformed file is outputted on stdout.\n");
 	
 	return from_syntax_error? SYNTAX_ERROR: NO_ERROR;
 }
@@ -54,6 +55,7 @@ int main(int argc, char * const * argv) {
 			{"verbose", no_argument,       &options.verbose, YES},
 			/* These options don't set a flag.
 			 We distinguish them by their indices. */
+			{"help",    no_argument,       NULL, 'h'},
 			{"delay",   required_argument, NULL, 'd'},
 			{"in-fps",  required_argument, NULL, 'i'},
 			{"out-fps", required_argument, NULL, 'o'},
@@ -62,7 +64,7 @@ int main(int argc, char * const * argv) {
 		
 		/* getopt_long stores the option index here. */
 		int option_index = 0;
-		getopt_long_ret = getopt_long(argc, argv, "vo:d:i:", long_options, &option_index);
+		getopt_long_ret = getopt_long(argc, argv, "hvo:d:i:", long_options, &option_index);
 		
 		switch (getopt_long_ret) {
 			case -1: break; /* End of options */
@@ -77,6 +79,9 @@ int main(int argc, char * const * argv) {
 				break;
 			case 'v':
 				options.verbose = YES;
+				break;
+			case 'h':
+				return usage(argv[0], NO);
 				break;
 			case 'd':
 				/* We could use atoi instead of having to make a dirty cast,
@@ -113,7 +118,7 @@ int main(int argc, char * const * argv) {
 		return usage(argv[0], YES);
 	
 	if (options.verbose) {
-		printf("Easter egg: verbose mode activated!\n");
+		printf("Easter egg: verbose mode is activated!\n");
 		printf("Options:\n");
 		printf("   delay:   %d\n", options.delay);
 		printf("   in-fps:  %g\n", options.ifps);
