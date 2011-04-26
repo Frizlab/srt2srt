@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		7B607635136466A000BDC2BE /* main.c in Sources */ = {isa = PBXBuildFile; fileRef = 7B607634136466A000BDC2BE /* main.c */; };
+		7B60765A136597D800BDC2BE /* srt2srt.c in Sources */ = {isa = PBXBuildFile; fileRef = 7B607658136597D800BDC2BE /* srt2srt.c */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -27,7 +28,10 @@
 		7B607634136466A000BDC2BE /* main.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = main.c; sourceTree = "<group>"; };
 		7B607636136466A000BDC2BE /* srt2srt.1 */ = {isa = PBXFileReference; lastKnownFileType = text.man; path = srt2srt.1; sourceTree = "<group>"; };
 		7B607644136473E300BDC2BE /* Readme.md */ = {isa = PBXFileReference; lastKnownFileType = text; path = Readme.md; sourceTree = "<group>"; };
-		7B6076561365906100BDC2BE /* free_const_char.h */ = {isa = PBXFileReference; fileEncoding = 4; path = free_const_char.h; sourceTree = "<group>"; };
+		7B6076561365906100BDC2BE /* free_const_char.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = free_const_char.h; sourceTree = "<group>"; };
+		7B607658136597D800BDC2BE /* srt2srt.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = srt2srt.c; sourceTree = "<group>"; };
+		7B607659136597D800BDC2BE /* srt2srt.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = srt2srt.h; sourceTree = "<group>"; };
+		7B60765B1365998600BDC2BE /* constants.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = constants.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -62,7 +66,10 @@
 			isa = PBXGroup;
 			children = (
 				7B6076561365906100BDC2BE /* free_const_char.h */,
+				7B60765B1365998600BDC2BE /* constants.h */,
 				7B607634136466A000BDC2BE /* main.c */,
+				7B607659136597D800BDC2BE /* srt2srt.h */,
+				7B607658136597D800BDC2BE /* srt2srt.c */,
 				7B607636136466A000BDC2BE /* srt2srt.1 */,
 			);
 			path = srt2srt;
@@ -119,6 +126,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				7B607635136466A000BDC2BE /* main.c in Sources */,
+				7B60765A136597D800BDC2BE /* srt2srt.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

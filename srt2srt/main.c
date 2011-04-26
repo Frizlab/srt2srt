@@ -12,34 +12,17 @@
 #include <assert.h>
 #include <strings.h>
 
+#include "srt2srt.h"
+#include "constants.h"
 #include "free_const_char.h"
-
-typedef int BOOL;
-#define NO  ((BOOL)0)
-#define YES ((BOOL)1)
-
-typedef enum e_error {
-	NO_ERROR     = 0,
-	SYNTAX_ERROR = 1
-} t_error;
-
-typedef struct s_prgm_options {
-	BOOL verbose;       /* Default: NO */
-	
-	const char *output; /* Default: NULL. Means stdout. */	
-	
-	int delay;          /* Default: 0 */
-	float ifps;         /* Default: 25 */
-	float ofps;         /* Default: 23.976 */
-} t_prgm_options;
 
 t_error usage(const char *progname, BOOL from_syntax_error) {
 	FILE *out = stdout;
 	if (from_syntax_error) out = stderr;
 	
 	fprintf(out, "usage: %s [option ...] filename\n", progname);
-	fprintf(out, "\n");
-	fprintf(out, "Options:\n");
+	fprintf(out, "If filename is \"-\", stdin is taken.\n");
+	fprintf(out, "\nOptions:\n");
 	fprintf(out, "\n   -d ms   --delay=ms\n   Sets the delay of the output srt file in millisecond. Must be an integer, but can be negative.\n");
 	fprintf(out, "\n   -i fps   --in-fps=fps\n   Sets the input fps of the given srt file. Default to 25.\n");
 	fprintf(out, "\n   -o fps   --out-fps=fps\n   Sets the output fps. Default to 23.976.\n");
@@ -52,7 +35,7 @@ int main(int argc, char * const * argv) {
 	int getopt_long_ret;
 	t_error ret = NO_ERROR;
 	BOOL parse_options_succeeded = YES;
-	t_prgm_options options = {NO, NULL, 0, 25, 23.976};
+	t_srt2srt_options options = {NO, NULL, NULL, 0, 25, 23.976};
 	
 	do {
 		char *number_parse_check = NULL;
@@ -136,6 +119,12 @@ int main(int argc, char * const * argv) {
 		goto end;
 	}
 	
+	if (strcmp(argv[argc - 1], "-") != 0) {
+		char *arg_copy = malloc(sizeof(char)*strlen(argv[argc - 1]));
+		strcpy(arg_copy, argv[argc - 1]);
+		options.input = arg_copy;
+	}
+	
 	if (options.verbose) {
 		fprintf(stderr, "Easter egg: verbose mode is activated!\n");
 		fprintf(stderr, "Options:\n");
@@ -143,10 +132,13 @@ int main(int argc, char * const * argv) {
 		fprintf(stderr, "   in-fps:  %g\n", options.ifps);
 		fprintf(stderr, "   out-fps: %g\n", options.ofps);
 		fprintf(stderr, "   output:  %s\n", options.output != NULL? options.output: "stdout");
-		fprintf(stderr, "Treated file path is: %s\n", argv[argc - 1]);
+		fprintf(stderr, "Treated file is: %s\n", options.input != NULL? options.input: "stdin");
 	}
 	
+	ret = treat_srt(&options, YES);
+	
 end:
+	if (options.input != NULL)  free_const_char(options.input);
 	if (options.output != NULL) free_const_char(options.output);
 	return ret;
 }
