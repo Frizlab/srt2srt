@@ -23,7 +23,7 @@ t_error usage(const char *progname, BOOL from_syntax_error) {
 	fprintf(out, "usage: %s [option ...] filename\n", progname);
 	fprintf(out, "If filename is \"-\", stdin is taken.\n");
 	fprintf(out, "\nOptions:\n");
-	fprintf(out, "\n   -d ms   --delay=ms\n   Sets the delay of the output srt file in millisecond. Must be an integer, but can be negative.\n");
+	fprintf(out, "\n   -d ms   --delay=ms\n   Sets the delay of the output srt file in millisecond. Must be an integer, but can be negative. The delay is applied before the fps adjustements.\n");
 	fprintf(out, "\n   -i fps   --in-fps=fps\n   Sets the input fps of the given srt file. Default to 25.\n");
 	fprintf(out, "\n   -o fps   --out-fps=fps\n   Sets the output fps. Default to 23.976.\n");
 	fprintf(out, "\n   --output=filename\n   Sets the output of srt2srt. If omitted or set to \"-\", will output on stdout.\n");
