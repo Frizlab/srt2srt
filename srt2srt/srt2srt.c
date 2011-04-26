@@ -23,6 +23,16 @@ BOOL wait_for_srt_entry_arrow_end(char c, t_engine_datas *datas, void *engine);
 BOOL wait_for_blank_line(char c, t_engine_datas *datas, void *engine);
 
 void compute_time_diff_with(unsigned long int *time_seconds, unsigned long int *seconds_fraction, const t_srt2srt_options *options) {
+	double time_total = *seconds_fraction;
+	
+	while (time_total > 1.) time_total /= 10;
+	time_total += *time_seconds;
+	
+	time_total -= options->delay;
+	time_total *= (options->ifps/options->ofps);
+	
+	*time_seconds = time_total;
+	*seconds_fraction = (time_total - *time_seconds) * 1000;
 }
 
 void print_time_(unsigned long int time_seconds, unsigned long int seconds_fraction, FILE *out_fp) {
@@ -34,7 +44,7 @@ void print_time_(unsigned long int time_seconds, unsigned long int seconds_fract
 	time_seconds -= minutes * 60;
 	
 	fprintf(out_fp, "%02ld:%02ld:%02ld", hours, minutes, time_seconds);
-	fprintf(out_fp, ",%3ld", seconds_fraction);
+	fprintf(out_fp, ",%ld", seconds_fraction);
 }
 
 BOOL wait_for_srt_entry_idx_start(char c, t_engine_datas *datas, void *engine) {
