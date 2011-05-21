@@ -29,6 +29,11 @@ order to resynchronize them with their associated movie.
 
 Supported functionalities:
 
-* Currently none, the project just opened! Stay tuned…
+* Delay all subtitles in an srt file
+* Change fps of an srt file.
+Srt files are time-based, but sometimes they are created by converting
+a frame-based subtitle file. If the fps was not set correctly for the
+conversion, the subtitles will be progressively more and more de-synchronized.
+srt2srt can correct this problem.
 
 [srt_article_wiki]: http://en.wikipedia.org/wiki/SubRip
