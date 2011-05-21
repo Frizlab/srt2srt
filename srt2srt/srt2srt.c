@@ -23,19 +23,23 @@ BOOL wait_for_srt_entry_arrow_end(char c, t_engine_datas *datas, void *engine);
 BOOL wait_for_blank_line(char c, t_engine_datas *datas, void *engine);
 
 void compute_time_diff_with(unsigned long int *time_seconds, unsigned long int *seconds_fraction, const t_srt2srt_options *options) {
-	double time_total = *seconds_fraction;
+	double time_total_seconds = *seconds_fraction;
 	
-	while (time_total > 1.) time_total /= 10;
-	time_total += *time_seconds;
+	while (time_total_seconds > 1.) time_total_seconds /= 10;
+	time_total_seconds += *time_seconds;
 	
-	time_total -= options->delay;
-	time_total *= (options->ifps/options->ofps);
+	/* Doing the actual time modification here */
+	time_total_seconds -= options->delay_before;
+	time_total_seconds *= options->ifps;
+	time_total_seconds /= options->ofps;
+	time_total_seconds -= options->delay_after;
+	/* Done */
 	
-	*time_seconds = time_total;
-	*seconds_fraction = (time_total - *time_seconds) * 1000;
+	*time_seconds = time_total_seconds;
+	*seconds_fraction = (time_total_seconds - *time_seconds) * 1000;
 }
 
-void print_time_(unsigned long int time_seconds, unsigned long int seconds_fraction, FILE *out_fp) {
+void print_time(unsigned long int time_seconds, unsigned long int seconds_fraction, FILE *out_fp) {
 	unsigned long int hours, minutes;
 	
 	hours = time_seconds/(60*60);
@@ -149,7 +153,7 @@ BOOL wait_for_srt_entry_time_fraction_end(char c, t_engine_datas *datas, void *e
 	if (( datas->parsing_start_time && (isblank(c) || c == '-')) ||
 		 (!datas->parsing_start_time && (isblank(c) || c == '\n' || c == '\r'))) {
 		compute_time_diff_with(&datas->cur_parsed_time_seconds, &datas->cur_parsed_number, datas->options);
-		print_time_(datas->cur_parsed_time_seconds, datas->cur_parsed_number, datas->out_fp);
+		print_time(datas->cur_parsed_time_seconds, datas->cur_parsed_number, datas->out_fp);
 		
 		putc(c, datas->out_fp);
 		datas->cur_parsed_number = 0;

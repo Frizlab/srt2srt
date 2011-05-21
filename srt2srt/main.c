@@ -23,7 +23,8 @@ t_error usage(const char *progname, BOOL from_syntax_error) {
 	fprintf(out, "usage: %s [option ...] filename\n", progname);
 	fprintf(out, "If filename is \"-\", stdin is taken.\n");
 	fprintf(out, "\nOptions:\n");
-	fprintf(out, "\n   -d ms   --delay=ms\n   Sets the delay of the output srt file in millisecond. Must be an integer, but can be negative. The delay is applied before the fps adjustements.\n");
+	fprintf(out, "\n   -d ms   --delay-before=ms\n   Sets the delay of the output srt file in millisecond. Must be an integer, but can be negative. This delay is applied before the fps adjustements.\n");
+	fprintf(out, "\n   -e ms   --delay-after=ms\n   Sets the delay of the output srt file in millisecond. Must be an integer, but can be negative. This delay is applied after the fps adjustements.\n");
 	fprintf(out, "\n   -i fps   --in-fps=fps\n   Sets the input fps of the given srt file. Default to 25.\n");
 	fprintf(out, "\n   -o fps   --out-fps=fps\n   Sets the output fps. Default to 23.976.\n");
 	fprintf(out, "\n   --output=filename\n   Sets the output of srt2srt. If omitted or set to \"-\", will output on stdout.\n");
@@ -35,7 +36,7 @@ int main(int argc, char * const * argv) {
 	int getopt_long_ret;
 	t_error ret = NO_ERROR;
 	BOOL parse_options_succeeded = YES;
-	t_srt2srt_options options = {NO, NULL, NULL, 0, 25, 23.976};
+	t_srt2srt_options options = {NO, NULL, NULL, 0, 0, 25, 23.976};
 	
 	do {
 		char *number_parse_check = NULL;
@@ -45,11 +46,12 @@ int main(int argc, char * const * argv) {
 			{"verbose", no_argument,       &options.verbose, YES},
 			/* These options don't set a flag.
 			 We distinguish them by their indices. */
-			{"help",    no_argument,       NULL, 'h'},
-			{"delay",   required_argument, NULL, 'd'},
-			{"in-fps",  required_argument, NULL, 'i'},
-			{"out-fps", required_argument, NULL, 'o'},
-			{"output",  required_argument, NULL, 'p'},
+			{"help",         no_argument,       NULL, 'h'},
+			{"delay-before", required_argument, NULL, 'd'},
+			{"delay-after",  required_argument, NULL, 'e'},
+			{"in-fps",       required_argument, NULL, 'i'},
+			{"out-fps",      required_argument, NULL, 'o'},
+			{"output",       required_argument, NULL, 'p'},
 			{0, 0, 0, 0}
 		};
 		
@@ -86,9 +88,16 @@ int main(int argc, char * const * argv) {
 				 * but I specifially want to check that the number is correctly
 				 * parsed, and atoi cannot this.
 				 * Moreover, atoi has been deprecated by strtol (man atoi) */
-				options.delay = (int)strtol(optarg, &number_parse_check, 10);
+				options.delay_before = (int)strtol(optarg, &number_parse_check, 10);
 				if (*number_parse_check != '\0') {
-					fprintf(stderr, "%s: bad argument for the \"delay\" option.\n", argv[0]);
+					fprintf(stderr, "%s: bad argument for the \"delay-before\" option.\n", argv[0]);
+					parse_options_succeeded = NO;
+				}
+				break;
+			case 'e':
+				options.delay_after = (int)strtol(optarg, &number_parse_check, 10);
+				if (*number_parse_check != '\0') {
+					fprintf(stderr, "%s: bad argument for the \"delay-after\" option.\n", argv[0]);
 					parse_options_succeeded = NO;
 				}
 				break;
@@ -128,10 +137,11 @@ int main(int argc, char * const * argv) {
 	if (options.verbose) {
 		fprintf(stderr, "Easter egg: verbose mode is activated!\n");
 		fprintf(stderr, "Options:\n");
-		fprintf(stderr, "   delay:   %d\n", options.delay);
-		fprintf(stderr, "   in-fps:  %g\n", options.ifps);
-		fprintf(stderr, "   out-fps: %g\n", options.ofps);
-		fprintf(stderr, "   output:  %s\n", options.output != NULL? options.output: "stdout");
+		fprintf(stderr, "   delay-before: %d\n", options.delay_before);
+		fprintf(stderr, "   delay-after:  %d\n", options.delay_after);
+		fprintf(stderr, "   in-fps:       %g\n", options.ifps);
+		fprintf(stderr, "   out-fps:      %g\n", options.ofps);
+		fprintf(stderr, "   output:       %s\n", options.output != NULL? options.output: "stdout");
 		fprintf(stderr, "Treated file is: %s\n", options.input != NULL? options.input: "stdin");
 	}
 	

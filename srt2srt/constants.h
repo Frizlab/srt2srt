@@ -25,7 +25,8 @@ typedef struct s_srt2srt_options {
 	const char *input;  /* No default, must be set. */	
 	const char *output; /* Default: NULL. Means stdout. */	
 	
-	int delay;          /* Default: 0 */
+	int delay_before;   /* Default: 0 */
+	int delay_after;    /* Default: 0 */
 	float ifps;         /* Default: 25 */
 	float ofps;         /* Default: 23.976 */
 } t_srt2srt_options;

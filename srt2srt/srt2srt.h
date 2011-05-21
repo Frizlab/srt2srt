@@ -27,7 +27,7 @@ typedef struct s_engine_datas {
 } t_engine_datas;
 typedef BOOL (*f_engine)(char c, t_engine_datas *datas, void/*f_engine*/ *engine);
 
-void print_time_(unsigned long int time_seconds, unsigned long int seconds_fraction, FILE *out_fp);
+void print_time(unsigned long int time_seconds, unsigned long int seconds_fraction, FILE *out_fp);
 void compute_time_diff_with(unsigned long int *time_seconds, unsigned long int *seconds_fraction, const t_srt2srt_options *options);
 
 /* in_file:  pass NULL for stdin
