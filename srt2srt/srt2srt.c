@@ -29,10 +29,10 @@ void compute_time_diff_with(unsigned long int *time_seconds, unsigned long int *
 	time_total_seconds += *time_seconds;
 	
 	/* Doing the actual time modification here */
-	time_total_seconds -= options->delay_before;
+	time_total_seconds -= ((double)options->delay_before / 1000.);
 	time_total_seconds *= options->ifps;
 	time_total_seconds /= options->ofps;
-	time_total_seconds -= options->delay_after;
+	time_total_seconds -= ((double)options->delay_after / 1000.);
 	/* Done */
 	
 	*time_seconds = time_total_seconds;
