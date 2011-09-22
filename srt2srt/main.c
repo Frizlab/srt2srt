@@ -43,7 +43,7 @@ int main(int argc, char * const * argv) {
 		struct option long_options[] =
 		{
 			/* These options set a flag. */
-			{"verbose", no_argument,       &options.verbose, YES},
+			{"verbose", no_argument, &options.verbose, YES},
 			/* These options don't set a flag.
 			 We distinguish them by their indices. */
 			{"help",         no_argument,       NULL, 'h'},
@@ -57,7 +57,7 @@ int main(int argc, char * const * argv) {
 		
 		/* getopt_long stores the option index here. */
 		int option_index = 0;
-		getopt_long_ret = getopt_long(argc, argv, "hvo:d:i:", long_options, &option_index);
+		getopt_long_ret = getopt_long(argc, argv, "vhd:e:i:o:p:", long_options, &option_index);
 		
 		switch (getopt_long_ret) {
 			case -1: break; /* End of options */
