@@ -129,7 +129,7 @@ int main(int argc, char * const * argv) {
 	}
 	
 	if (strcmp(argv[argc - 1], "-") != 0) {
-		char *arg_copy = malloc(sizeof(char)*strlen(argv[argc - 1]));
+		char *arg_copy = malloc(sizeof(char)*(strlen(argv[argc - 1]) + 1));
 		strcpy(arg_copy, argv[argc - 1]);
 		options.input = arg_copy;
 	}
