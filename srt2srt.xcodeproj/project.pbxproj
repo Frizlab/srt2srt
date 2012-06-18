@@ -101,7 +101,7 @@
 		7B607627136466A000BDC2BE /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0420;
+				LastUpgradeCheck = 0430;
 				ORGANIZATIONNAME = "Frost Land";
 			};
 			buildConfigurationList = 7B60762A136466A000BDC2BE /* Build configuration list for PBXProject "srt2srt" */;
