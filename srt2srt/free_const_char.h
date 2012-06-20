@@ -9,9 +9,9 @@
  */
 
 #ifndef FREE_CONST_CHAR_H_
-#define FREE_CONST_CHAR_H_
+# define FREE_CONST_CHAR_H_
 
-#include <stdlib.h>
+# include <stdlib.h>
 
 union u_const_vs_no_const_char
 {

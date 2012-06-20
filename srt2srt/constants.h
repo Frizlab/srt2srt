@@ -7,11 +7,11 @@
  */
 
 #ifndef CONSTANTS_H_
-#define CONSTANTS_H_
+# define CONSTANTS_H_
 
 typedef int BOOL;
-#define NO  ((BOOL)0)
-#define YES ((BOOL)1)
+# define NO  ((BOOL)0)
+# define YES ((BOOL)1)
 
 typedef enum e_error {
 	NO_ERROR     = 0,

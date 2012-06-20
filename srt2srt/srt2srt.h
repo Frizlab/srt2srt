@@ -7,12 +7,12 @@
  */
 
 #ifndef SRT_2_SRT_H_
-#define SRT_2_SRT_H_
+# define SRT_2_SRT_H_
 
-#include <stdio.h>
-#include "constants.h"
+# include <stdio.h>
+# include "constants.h"
 
-#define BUFF_SIZE (1024)
+# define BUFF_SIZE (1024)
 
 /* We will implement an engine state algorithm */
 typedef struct s_engine_datas {
