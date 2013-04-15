@@ -35,5 +35,9 @@ Srt files are time-based, but sometimes they are created by converting
 a frame-based subtitle file. If the fps was not set correctly for the
 conversion, the subtitles will be progressively more and more de-synchronized.
 srt2srt can correct this problem.
+* Normalize subtitles.
+Sometimes subtitles overlaps (one subtitle starts before the previous has
+ended). This might not be supported by some media players and can be fixed with
+srt2srt.
 
 [srt_article_wiki]: http://en.wikipedia.org/wiki/SubRip
