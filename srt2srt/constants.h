@@ -21,6 +21,7 @@ typedef enum e_error {
 
 typedef struct s_srt2srt_options {
 	BOOL verbose;       /* Default: NO */
+	BOOL normalize;     /* Default: NO */
 	
 	const char *input;  /* No default, must be set. */
 	const char *output; /* Default: NULL. Means stdout. */

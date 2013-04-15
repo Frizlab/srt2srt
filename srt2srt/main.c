@@ -27,6 +27,7 @@ t_error usage(const char *progname, BOOL from_syntax_error) {
 	fprintf(out, "\n   -e ms   --delay-after=ms\n   Sets the delay of the output srt file in millisecond. Must be an integer, but can be negative. This delay is applied after the fps adjustements.\n");
 	fprintf(out, "\n   -i fps   --in-fps=fps\n   Sets the input fps of the given srt file. Default to 25.\n");
 	fprintf(out, "\n   -o fps   --out-fps=fps\n   Sets the output fps. Default to 23.976.\n");
+	fprintf(out, "\n   -n   --normalize\n   Pushes time of overlapping subtitles to remove overlap.\n");
 	fprintf(out, "\n   --output=filename\n   Sets the output of srt2srt. If omitted or set to \"-\", will output on stdout.\n");
 	
 	return from_syntax_error? SYNTAX_ERROR: NO_ERROR;
@@ -36,14 +37,15 @@ int main(int argc, char * const * argv) {
 	int getopt_long_ret;
 	t_error ret = NO_ERROR;
 	BOOL parse_options_succeeded = YES;
-	t_srt2srt_options options = {NO, NULL, NULL, 0, 0, 25, 23.976};
+	t_srt2srt_options options = {NO, NO, NULL, NULL, 0, 0, 25, 23.976};
 	
 	do {
 		char *number_parse_check = NULL;
 		struct option long_options[] =
 		{
 			/* These options set a flag. */
-			{"verbose", no_argument, &options.verbose, YES},
+			{"verbose",   no_argument, &options.verbose,   YES},
+			{"normalize", no_argument, &options.normalize, YES},
 			/* These options don't set a flag.
 			 We distinguish them by their indices. */
 			{"help",         no_argument,       NULL, 'h'},
@@ -57,7 +59,7 @@ int main(int argc, char * const * argv) {
 		
 		/* getopt_long stores the option index here. */
 		int option_index = 0;
-		getopt_long_ret = getopt_long(argc, argv, "vhd:e:i:o:p:", long_options, &option_index);
+		getopt_long_ret = getopt_long(argc, argv, "vnhd:e:i:o:p:", long_options, &option_index);
 		
 		switch (getopt_long_ret) {
 			case -1: break; /* End of options */
@@ -79,6 +81,9 @@ int main(int argc, char * const * argv) {
 				break;
 			case 'v':
 				options.verbose = YES;
+				break;
+			case 'n':
+				options.normalize = YES;
 				break;
 			case 'h':
 				return usage(argv[0], NO);
@@ -137,6 +142,7 @@ int main(int argc, char * const * argv) {
 	if (options.verbose) {
 		fprintf(stderr, "Easter egg: verbose mode is activated!\n");
 		fprintf(stderr, "Options:\n");
+		fprintf(stderr, "   normalize:    %s\n", options.normalize? "on": "off");
 		fprintf(stderr, "   delay-before: %d\n", options.delay_before);
 		fprintf(stderr, "   delay-after:  %d\n", options.delay_after);
 		fprintf(stderr, "   in-fps:       %g\n", options.ifps);

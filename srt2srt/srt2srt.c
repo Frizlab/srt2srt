@@ -22,7 +22,10 @@ BOOL wait_for_srt_entry_arrow_middle(char c, t_engine_datas *datas, void *engine
 BOOL wait_for_srt_entry_arrow_end(char c, t_engine_datas *datas, void *engine);
 BOOL wait_for_blank_line(char c, t_engine_datas *datas, void *engine);
 
-void compute_time_diff_with(unsigned long int *time_seconds, unsigned long int *seconds_fraction, const t_srt2srt_options *options) {
+
+#define MAX(a, b) (a>b? a: b)
+
+void process_time(unsigned long int *time_seconds, unsigned long int *seconds_fraction, double *previous_time, const t_srt2srt_options *options) {
 	double time_total_seconds = *seconds_fraction;
 	
 	while (time_total_seconds > 1.) time_total_seconds /= 10;
@@ -33,6 +36,8 @@ void compute_time_diff_with(unsigned long int *time_seconds, unsigned long int *
 	time_total_seconds *= options->ifps;
 	time_total_seconds /= options->ofps;
 	time_total_seconds -= ((double)options->delay_after / 1000.);
+	if (options->normalize) time_total_seconds = MAX(time_total_seconds, *previous_time + .001);
+	*previous_time = time_total_seconds;
 	/* Done */
 	
 	*time_seconds = time_total_seconds;
@@ -152,7 +157,7 @@ BOOL wait_for_srt_entry_time_fraction_end(char c, t_engine_datas *datas, void *e
 	
 	if (( datas->parsing_start_time && (isblank(c) || c == '-')) ||
 		 (!datas->parsing_start_time && (isblank(c) || c == '\n' || c == '\r'))) {
-		compute_time_diff_with(&datas->cur_parsed_time_seconds, &datas->cur_parsed_number, datas->options);
+		process_time(&datas->cur_parsed_time_seconds, &datas->cur_parsed_number, &datas->previous_time, datas->options);
 		print_time(datas->cur_parsed_time_seconds, datas->cur_parsed_number, datas->out_fp);
 		
 		putc(c, datas->out_fp);
@@ -241,7 +246,7 @@ t_error treat_srt(const t_srt2srt_options *options, BOOL print_error_messages) {
 	
 	BOOL error = NO;
 	f_engine engine = &wait_for_srt_entry_idx_start;
-	t_engine_datas engine_datas = {fpo, options, YES, 0, 0, '\0'};
+	t_engine_datas engine_datas = {fpo, options, YES, 0, 0, 0., '\0'};
 	
 	if (options->input != NULL) {
 		fpi = fopen(options->input, "rb");

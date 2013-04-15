@@ -23,12 +23,14 @@ typedef struct s_engine_datas {
 	unsigned long int cur_parsed_number;
 	unsigned long int cur_parsed_time_seconds;
 	
+	double previous_time;
+	
 	char prev_char;
 } t_engine_datas;
 typedef BOOL (*f_engine)(char c, t_engine_datas *datas, void/*f_engine*/ *engine);
 
 void print_time(unsigned long int time_seconds, unsigned long int seconds_fraction, FILE *out_fp);
-void compute_time_diff_with(unsigned long int *time_seconds, unsigned long int *seconds_fraction, const t_srt2srt_options *options);
+void process_time(unsigned long int *time_seconds, unsigned long int *seconds_fraction, double *previous_time, const t_srt2srt_options *options);
 
 /* in_file:  pass NULL for stdin
  * out_file: pass NULL for stdout */
