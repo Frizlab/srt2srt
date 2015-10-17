@@ -246,7 +246,9 @@ t_error treat_srt(const t_srt2srt_options *options, BOOL print_error_messages) {
 	
 	BOOL error = NO;
 	f_engine engine = &wait_for_srt_entry_idx_start;
-	t_engine_datas engine_datas = {fpo, options, YES, 0, 0, 0., '\0'};
+	t_engine_datas engine_datas = {NULL, NULL, YES, 0, 0, 0., '\0'};
+	engine_datas.options = options;
+	engine_datas.out_fp = fpo;
 	
 	if (options->input != NULL) {
 		fpi = fopen(options->input, "rb");

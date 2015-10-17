@@ -40,12 +40,13 @@ int main(int argc, char * const * argv) {
 	t_srt2srt_options options = {NO, NO, NULL, NULL, 0, 0, 25, 23.976};
 	
 	do {
+		int option_index = 0;
 		char *number_parse_check = NULL;
 		struct option long_options[] =
 		{
 			/* These options set a flag. */
-			{"verbose",   no_argument, &options.verbose,   YES},
-			{"normalize", no_argument, &options.normalize, YES},
+			{"verbose",   no_argument, NULL /* Init to NULL, actual value set later to avoid warning */, YES},
+			{"normalize", no_argument, NULL /* Init to NULL, actual value set later to avoid warning */, YES},
 			/* These options don't set a flag.
 			 We distinguish them by their indices. */
 			{"help",         no_argument,       NULL, 'h'},
@@ -56,9 +57,9 @@ int main(int argc, char * const * argv) {
 			{"output",       required_argument, NULL, 'p'},
 			{0, 0, 0, 0}
 		};
+		long_options[0].flag = &options.verbose;
+		long_options[1].flag = &options.normalize;
 		
-		/* getopt_long stores the option index here. */
-		int option_index = 0;
 		getopt_long_ret = getopt_long(argc, argv, "vnhd:e:i:o:p:", long_options, &option_index);
 		
 		switch (getopt_long_ret) {
